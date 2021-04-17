@@ -43,6 +43,7 @@ function stackTraverse(root: TreeNode) {
     const stack: TreeNode[] = [root];
 
     for (const node of stack) {
+        stack.unshift();
         stack.push(...node.children);
     }
 }
