@@ -1,31 +1,27 @@
-import { StringParameter, NumberParameter } from "./parameter.ts";
-import { StringOperator, NumberOperator } from "./operator.ts";
-import { StringValue, NumberValue } from "./value.ts";
-import { Filter } from "./filter.ts";
+import { FilterBuilder } from "./builder.ts";
+import { CelGenerator } from "./cel.ts";
 
-const nameParameter = new StringParameter("name");
-const countParameter = new NumberParameter("count")
-const containsOperator = new StringOperator("contains");
-const equalOperator = new NumberOperator("=");
-const notEqualOperator = new NumberOperator("!=");
-const lessOperator = new NumberOperator("<");
-const lessOrEqualOperator = new NumberOperator("<=");
-const moreOperator = new NumberOperator(">");
-const moreOrEqualOperator = new NumberOperator(">=");
-
-const expr1 = Filter.groupOr(
-    Filter.stringFilter(nameParameter, new StringValue("test"), containsOperator),
-    Filter.stringFilter(nameParameter, new StringValue("tset"), containsOperator)
+const filter1 = new FilterBuilder(
+    FilterBuilder.group.or(
+        FilterBuilder.string.eq("test", "test"),
+        FilterBuilder.string.eq("test", "tset"),
+    )
 )
 
-const expr2 = Filter.groupAnd(
-    Filter.numberFilter(countParameter, new NumberValue(10), lessOperator),
-    Filter.numberFilter(countParameter, new NumberValue(5), moreOperator)
+const filter2 = new FilterBuilder(
+    FilterBuilder.group.or(
+        FilterBuilder.number.eq("test", 1),
+        FilterBuilder.number.eq("test", 2),
+    )
 )
 
-const expr3 = Filter.groupAnd(
-    expr1,
-    expr2
+const filter3 = new FilterBuilder(
+    FilterBuilder.group.and(
+        filter1.expression,
+        filter2.expression
+    )
 )
 
-console.log(expr3.toString());
+const celGenerator = new CelGenerator();
+const result = celGenerator.visitNode(filter3.expression);
+console.log(result);
