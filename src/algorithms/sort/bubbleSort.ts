@@ -6,11 +6,10 @@ export function bubbleSort<TValue>(array: TValue[], comparator: (a: TValue, b: T
             const compare = comparator(array[i], array[j]);
             
             if (compare === 0) {
-                continue
-            } else if (compare < 0) {
-                swap(array, i, j)
+                continue;
             } else if (compare > 0) {
-                swap(array, j, i)
+                swap(array, i, j)
+                continue;
             }
         }
     }
